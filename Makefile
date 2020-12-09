@@ -12,3 +12,5 @@ build-proxy:
 
 build: build-app build-server build-proxy
 
+run:
+	docker-compose up -d
