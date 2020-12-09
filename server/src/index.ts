@@ -7,7 +7,7 @@ import passport from "passport";
 import { handleError } from "./middleware/error";
 import router from "./route";
 import morgan from "morgan";
-// import * as PassportStrategy from "./utils/passport";
+import * as PassportStrategy from "./util/passport";
 import cookieParser from "cookie-parser";
 
 const isDev = process.env.NODE_ENV === "development";
@@ -58,20 +58,9 @@ export default async function createApp() {
   // Passport
   app.use(passport.initialize());
   app.use(passport.session());
-  // passport.use(PassportStrategy.localStrategy);
-  // passport.serializeUser(PassportStrategy.serialize);
-  // passport.deserializeUser(PassportStrategy.deserialize);
-  // app.use((req, _, next) => {
-  //   if (
-  //     !req.session?.passport ||
-  //     JSON.stringify(req.session.passport) === "{}"
-  //   ) {
-  //     req.user = undefined;
-  //   }
-  //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  //   req.currentUser = req.user as any;
-  //   next();
-  // });
+  passport.use(PassportStrategy.localStrategy);
+  passport.serializeUser(PassportStrategy.serialize);
+  passport.deserializeUser(PassportStrategy.deserialize);
   // Routes
   app.use(router);
   // Error handling
