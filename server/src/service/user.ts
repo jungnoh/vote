@@ -1,5 +1,5 @@
 import {User, UserModel, UserProfile} from "../model/user";
-import {hashPassword, verifyPassword} from "../util/crypto";
+import {createKey, hashPassword, verifyPassword} from "../util/crypto";
 
 export type USER_EXISTS = "EUSER_EXISTS";
 
@@ -48,13 +48,12 @@ export async function create(user: UserProfile & {password: string, votePassword
   if (userExists) {
     return "EUSER_EXISTS";
   }
-
   const passwordHash = await hashPassword(user.password);
-  // TODO: Add pk algorithm
+  const voteKeys = await createKey(user.votePassword);
   const userPayload = {
     ...user,
     password: passwordHash,
-    votePK: user.votePassword,
+    voteKeys,
     adminLevel: 0
   } as (User & {votePassword?: string}); // 이래야 ts 에러가 안남
   delete userPayload.votePassword;

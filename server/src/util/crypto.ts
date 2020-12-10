@@ -1,14 +1,10 @@
 import argon from "argon2";
 import crypto from "crypto";
 import {ec as EC} from "elliptic";
+import { Credentials } from "../model/vote";
 
 export const hashPassword = argon.hash;
 export const verifyPassword = argon.verify;
-
-interface Credentials {
-  encryptedPrivate: string;
-  pbkdfSalt: string;
-}
 
 const randomBytes = (bytes: number) => new Promise<Buffer>((res, rej) => {
   crypto.randomBytes(bytes, (err, buf) => {
@@ -65,7 +61,7 @@ async function aesDecrypt(data: string, secret: Buffer) {
  * @description 비밀번호 기반 서명 비밀키-공개키 쌍을 생성합니다.
  * @param password 생성에 사용할 비밀번호
  */
-export async function createKey(password: string): Promise<Credentials & {public: string}> {
+export async function createKey(password: string): Promise<Credentials> {
   // PBKDF2 salt 생성
   const pbkdfSalt = await randomBytes(32);
   // ECDSA 키 쌍 생성
@@ -75,9 +71,9 @@ export async function createKey(password: string): Promise<Credentials & {public
   const encryptedPrivateKey = await aesEncrypt(signKey.getPrivate().toBuffer(), secretKey);
 
   return {
-    encryptedPrivate: encryptedPrivateKey,
-    pbkdfSalt: pbkdfSalt.toString("base64"),
-    public: signKey.getPublic().encode("hex", false)
+    privateKey: encryptedPrivateKey,
+    publicKey: signKey.getPublic().encode("hex", false),
+    passwordSalt: pbkdfSalt.toString("base64"),
   };
 }
 
@@ -91,9 +87,9 @@ export async function createKey(password: string): Promise<Credentials & {public
 export async function sign(password: string, message: string, credentials: Credentials): Promise<string | undefined> {
   try {
     // PBKDF2로 복호화 키 생성
-    const secretKey = await pbkdf2(password, Buffer.from(credentials.pbkdfSalt, "base64"), PBKDF_ROUNDS, 32, "sha512");
+    const secretKey = await pbkdf2(password, Buffer.from(credentials.passwordSalt, "base64"), PBKDF_ROUNDS, 32, "sha512");
     // ECDSA 비밀키 복호화
-    const privateKey = await aesDecrypt(credentials.encryptedPrivate, secretKey);
+    const privateKey = await aesDecrypt(credentials.privateKey, secretKey);
     // 곡선 생성
     const signCurve = EC_CURVE.keyFromPrivate(privateKey, "hex");
     // 메세지 SHA-512 해싱 및 서명

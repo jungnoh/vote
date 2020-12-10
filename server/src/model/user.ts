@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { TimestampedDocument } from ".";
+import { Credentials } from "./vote";
 
 export interface UserProfile {
   // 사용자명
@@ -15,10 +16,10 @@ export interface UserProfile {
 export interface User extends UserProfile, TimestampedDocument {
   // 비밀번호
   password: string;
-  // 투표 공개키
-  votePK: string;
   // 관리자 권한
   adminLevel: number;
+  // 투표 관련 키
+  voteKeys: Credentials;
 }
 
 const schema = new mongoose.Schema({
@@ -47,8 +48,12 @@ const schema = new mongoose.Schema({
     type: String,
     required: true
   },
-  votePK: {
-    type: String,
+  voteKeys: {
+    type: {
+      privateKey: String,
+      publicKey: String,
+      passwordSalt: String
+    },
     required: true
   }
 }, {
