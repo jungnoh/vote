@@ -1,14 +1,13 @@
-import MongoStore from "connect-mongo";
 import express from "express";
 import expressSession from "express-session";
 import helmet from "helmet";
-import mongoose from "mongoose";
 import passport from "passport";
 import { handleError } from "./middleware/error";
 import router from "./route";
 import morgan from "morgan";
 import * as PassportStrategy from "./util/passport";
 import cookieParser from "cookie-parser";
+import { Sequelize } from "sequelize-typescript";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -16,17 +15,16 @@ async function setup() {
   if (isDev) {
     console.log("Running in development mode");
   }
-  if (process.env.MONGO_HOST === undefined) {
-    console.error("MONGO_HOST not found");
-    process.exit(1);
-  }
-  const mongooseConfig: mongoose.ConnectionOptions = {
-    useCreateIndex: true,
-    useFindAndModify: false,
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  };
-  await mongoose.connect(process.env.MONGO_HOST, mongooseConfig);
+
+  new Sequelize({
+    username: process.env.DB_USERNAME!,
+    password: process.env.DB_PASSWORD!,
+    database: process.env.DB_NAME!,
+    host: process.env.DB_HOSTNAME!,
+    port: parseInt(process.env.DB_PORT ?? "5432"),
+    dialect: "postgres",
+    models: [__dirname + "/model"]
+  });
 }
 
 export default async function createApp() {
@@ -42,10 +40,7 @@ export default async function createApp() {
       },
       resave: false,
       saveUninitialized: false,
-      secret: process.env.SESSION_SECRET!,
-      store: new (MongoStore(expressSession))({
-        mongooseConnection: mongoose.connection,
-      }),
+      secret: process.env.SESSION_SECRET!
     })
   );
 

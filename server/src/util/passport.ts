@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Strategy as LocalStrategy} from "passport-local";
-import {User} from "../model/user";
+import {User} from "../db/models/user";
 import * as UserService from "../service/user";
 
-export const WRONG_CREDENTIALS = "WRONG_CREDENTIALS";
+export const WRONG_CREDENTIALS = new Error("WRONG_CREDENTIALS");
 
 /**
  * @description Local authentication strategy
@@ -29,7 +29,7 @@ export const localStrategy = new LocalStrategy({
  * @param user `User` model object
  * @param done Callback function
  */
-export const serialize = (user: User, done: any) => {
+export const serialize = (user: any, done: any) => {
   done(null, user.username);
 };
 
@@ -38,10 +38,10 @@ export const serialize = (user: User, done: any) => {
  * @param username `SerializedUser` seralized user
  * @param done Callback function
  */
-export const deserialize = (username: string, done: any) => {
-  UserService.findOne(username).then((userObj) => {
-    if (userObj === undefined) {
-      done(null, {});
+export const deserialize = (username: string, done: (err: any, result: false | User) => void) => {
+  UserService.findOne("username", username).then((userObj) => {
+    if (!userObj) {
+      done(null, false);
     } else {
       done(null, userObj);
     }
