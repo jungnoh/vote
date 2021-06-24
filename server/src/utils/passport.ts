@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Strategy as LocalStrategy} from "passport-local";
 import {User} from "../db/models/user";
-import * as UserService from "../service/user";
+import * as UserService from "../services/user";
 
 export const WRONG_CREDENTIALS = new Error("WRONG_CREDENTIALS");
 
