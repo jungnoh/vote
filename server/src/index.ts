@@ -8,6 +8,7 @@ import morgan from "morgan";
 import * as PassportStrategy from "./utils/passport";
 import cookieParser from "cookie-parser";
 import { Sequelize } from "sequelize-typescript";
+import connectSessionSeq from "connect-session-sequelize";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -17,7 +18,7 @@ export default async function createApp() {
     console.log("Running in development mode");
   }
 
-  new Sequelize({
+  const sequelize = new Sequelize({
     username: process.env.DB_USERNAME!,
     password: process.env.DB_PASSWORD!,
     database: process.env.DB_NAME!,
@@ -25,6 +26,10 @@ export default async function createApp() {
     port: parseInt(process.env.DB_PORT ?? "5432"),
     dialect: "postgres",
     models: [__dirname + "/model"]
+  });
+  const sequelizeStore = new (connectSessionSeq(expressSession.Store))({
+    db: sequelize,
+    tableName: "sessions"
   });
 
   const app = express();
@@ -37,7 +42,8 @@ export default async function createApp() {
       },
       resave: false,
       saveUninitialized: false,
-      secret: process.env.SESSION_SECRET!
+      secret: process.env.SESSION_SECRET!,
+      store: sequelizeStore
     })
   );
 
