@@ -7,14 +7,14 @@ module.exports = {
     await queryInterface.createTable("sessions", {
       sid: {
         type: DataTypes.STRING(36),
-        primaryKey: true
+        primaryKey: true,
       },
       expires: DataTypes.DATE,
-      data: DataTypes.TEXT
+      data: DataTypes.TEXT,
     });
   },
 
   down: async (queryInterface: QueryInterface, sequelize: Sequelize) => {
     await queryInterface.dropTable("sessions");
-  }
+  },
 };

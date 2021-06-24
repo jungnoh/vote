@@ -1,5 +1,15 @@
-import { Table, Column, Model, DataType, CreatedAt, ForeignKey, BelongsTo, NotNull } from "sequelize-typescript";
 import { DataTypes } from "sequelize";
+import {
+  BelongsTo,
+  Column,
+  CreatedAt,
+  DataType,
+  ForeignKey,
+  Model,
+  NotNull,
+  Table,
+} from "sequelize-typescript";
+
 import { User } from "./user";
 
 @Table
@@ -18,7 +28,7 @@ export class Room extends Model {
 
   @ForeignKey(() => User)
   @NotNull
-  @Column({type: DataTypes.INTEGER, onDelete: "SET NULL"})
+  @Column({ type: DataTypes.INTEGER, onDelete: "SET NULL" })
   ownerId: number;
 
   @BelongsTo(() => User)

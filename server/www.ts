@@ -1,5 +1,6 @@
-import createApp from "./src";
 import http from "http";
+
+import createApp from "./src";
 
 const port = parseInt(process.env.SERVER_PORT ?? "8080");
 

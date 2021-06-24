@@ -1,21 +1,25 @@
+import connectSessionSeq from "connect-session-sequelize";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 import express from "express";
 import expressSession from "express-session";
 import helmet from "helmet";
+import httpStatus from "http-status";
 import passport from "passport";
-import { handleError } from "./middlewares/error";
-import router from "./routes";
-import morgan from "morgan";
-import * as PassportStrategy from "./utils/passport";
-import cookieParser from "cookie-parser";
 import { Sequelize } from "sequelize-typescript";
-import connectSessionSeq from "connect-session-sequelize";
+import xss from "xss-clean";
 
-const isDev = process.env.NODE_ENV === "development";
+import config from "./config/config";
+import logger from "./config/logger";
+import jwtStrategy from "./config/passport";
+import { errorConverter, errorHandler } from "./middlewares/error";
+import router from "./routes";
+import ApiError from "./utils/ApiError";
 
 export default async function createApp() {
   // Set configs
-  if (isDev) {
-    console.log("Running in development mode");
+  if (config.env === "development") {
+    logger.debug("Running in development mode");
   }
 
   const sequelize = new Sequelize({
@@ -25,47 +29,55 @@ export default async function createApp() {
     host: process.env.DB_HOSTNAME!,
     port: parseInt(process.env.DB_PORT ?? "5432"),
     dialect: "postgres",
-    models: [__dirname + "/model"]
+    models: [__dirname + "/model"],
   });
   const sequelizeStore = new (connectSessionSeq(expressSession.Store))({
     db: sequelize,
-    tableName: "sessions"
+    tableName: "sessions",
   });
 
   const app = express();
+
+  // Security
+  app.use(helmet());
+  app.use(xss());
+
+  app.use(cors());
+  app.options("*", cors());
+
   // Express session
   app.use(
     expressSession({
       cookie: {
-        httpOnly: false, // Client-side XHR will be used
-        maxAge: 24 * 60 * 60 * 1000, // 1 day
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
       },
       resave: false,
       saveUninitialized: false,
       secret: process.env.SESSION_SECRET!,
-      store: sequelizeStore
+      store: sequelizeStore,
     })
   );
 
-  app.use(helmet());
-  app.use(morgan("dev"));
   // Parsers
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
+
   // Passport
   app.use(passport.initialize());
-  app.use(passport.session());
-  passport.use(PassportStrategy.localStrategy);
-  passport.serializeUser(PassportStrategy.serialize);
-  passport.deserializeUser(PassportStrategy.deserialize);
+  passport.use(jwtStrategy);
+
   // Routes
   app.use(router);
-  // Error handling
-  app.use(handleError);
-  app.all("*", (_, res) => {
-    res.status(404).json({ success: false });
+  app.use((req, res, next) => {
+    next(new ApiError(httpStatus.NOT_FOUND, "Not found"));
   });
+
+  // Error handling
+  app.use(errorConverter);
+  app.use(errorHandler);
+
   // All set!
   return app;
 }

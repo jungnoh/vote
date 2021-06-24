@@ -1,4 +1,16 @@
-import { Table, Column, Model, DataType, CreatedAt, ForeignKey, BelongsTo, NotNull, HasMany, Default } from "sequelize-typescript";
+import {
+  BelongsTo,
+  Column,
+  CreatedAt,
+  DataType,
+  Default,
+  ForeignKey,
+  HasMany,
+  Model,
+  NotNull,
+  Table,
+} from "sequelize-typescript";
+
 import { Room } from "./room";
 import { User } from "./user";
 

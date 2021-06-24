@@ -10,6 +10,6 @@ export const login = {
 export const loginSSOCallback = {
   query: joi.object().keys({
     state: joi.string().required(),
-    code: joi.string().required()
-  })
+    code: joi.string().required(),
+  }),
 };

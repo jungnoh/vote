@@ -1,4 +1,5 @@
 import { Op } from "sequelize";
+
 import { User } from "../db/models/user";
 import { hashPassword, verifyPassword } from "../utils/crypto";
 
@@ -17,11 +18,14 @@ interface NewUser {
  * @param password 요청으로 들어온 비밀번호
  * @returns 사용자 정보가 알치할 경우 해당 User 객체, 일치하지 않을 경우 undefined
  */
-export async function authenticate(username: string, password: string): Promise<User | null> {
+export async function authenticate(
+  username: string,
+  password: string
+): Promise<User | null> {
   const foundUser = await User.findOne({
     where: {
-      username
-    }
+      username,
+    },
   });
   if (!foundUser) {
     return null;
@@ -33,9 +37,12 @@ export async function authenticate(username: string, password: string): Promise<
   return foundUser;
 }
 
-export async function findOne(type: "username" | "string", value: string): Promise<User | null> {
+export async function findOne(
+  type: "username" | "string",
+  value: string
+): Promise<User | null> {
   const user = await User.findOne({
-    [type]: value
+    [type]: value,
   });
   return user;
 }
@@ -51,9 +58,9 @@ export async function create(user: NewUser): Promise<Error | User> {
       [Op.or]: [
         { sparcsId: user.sparcsId },
         { username: user.name },
-        { email: user.email }
-      ]
-    }
+        { email: user.email },
+      ],
+    },
   });
   if (userExists) {
     return new Error("EUSER_EXISTS");
@@ -63,7 +70,7 @@ export async function create(user: NewUser): Promise<Error | User> {
     ...user,
     password: passwordHash,
   };
-  
+
   const createdUser = await User.create(userPayload);
   return createdUser;
 }

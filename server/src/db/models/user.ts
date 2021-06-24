@@ -1,4 +1,13 @@
-import { Table, Column, Model, DataType, CreatedAt, NotNull, HasMany } from "sequelize-typescript";
+import {
+  Column,
+  CreatedAt,
+  DataType,
+  HasMany,
+  Model,
+  NotNull,
+  Table,
+} from "sequelize-typescript";
+
 import { Room, RoomJoinLog } from "./room";
 import { VoteBallot } from "./vote";
 

@@ -8,7 +8,7 @@ module.exports = {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       username: {
         type: DataTypes.STRING(32),
@@ -16,7 +16,7 @@ module.exports = {
       },
       email: {
         type: DataTypes.STRING(120),
-        allowNull: false
+        allowNull: false,
       },
       password: {
         type: DataTypes.STRING(240),
@@ -24,38 +24,38 @@ module.exports = {
       },
       fullName: {
         type: DataTypes.STRING(32),
-        allowNull: false
+        allowNull: false,
       },
       createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW
+        defaultValue: DataTypes.NOW,
       },
       sparcsId: {
         type: DataTypes.STRING(120),
         allowNull: false,
-      }
+      },
     });
     await queryInterface.createTable("rooms", {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW
+        defaultValue: DataTypes.NOW,
       },
       startedAt: {
         type: DataTypes.DATE,
         allowNull: true,
-        defaultValue: null
+        defaultValue: null,
       },
       endedAt: {
         type: DataTypes.DATE,
         allowNull: true,
-        defaultValue: null
+        defaultValue: null,
       },
       ownerId: {
         type: DataTypes.INTEGER,
@@ -63,15 +63,15 @@ module.exports = {
         onDelete: "SET NULL",
         references: {
           model: "users",
-          key: "id"
-        }
-      }
+          key: "id",
+        },
+      },
     });
     await queryInterface.createTable("roomadmins", {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       roomId: {
         type: DataTypes.INTEGER,
@@ -79,8 +79,8 @@ module.exports = {
         onDelete: "CASCADE",
         references: {
           model: "rooms",
-          key: "id"
-        }
+          key: "id",
+        },
       },
       userId: {
         type: DataTypes.INTEGER,
@@ -88,15 +88,15 @@ module.exports = {
         onDelete: "CASCADE",
         references: {
           model: "users",
-          key: "id"
-        }
-      }
+          key: "id",
+        },
+      },
     });
     await queryInterface.createTable("roomjoinlogs", {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       roomId: {
         type: DataTypes.INTEGER,
@@ -104,8 +104,8 @@ module.exports = {
         onDelete: "CASCADE",
         references: {
           model: "rooms",
-          key: "id"
-        }
+          key: "id",
+        },
       },
       userId: {
         type: DataTypes.INTEGER,
@@ -113,8 +113,8 @@ module.exports = {
         onDelete: "CASCADE",
         references: {
           model: "users",
-          key: "id"
-        }
+          key: "id",
+        },
       },
       ip: {
         type: DataTypes.STRING(40),
@@ -123,18 +123,18 @@ module.exports = {
       joinedAt: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW
+        defaultValue: DataTypes.NOW,
       },
       leavedAt: {
         type: DataTypes.DATE,
-        allowNull: true
-      }
+        allowNull: true,
+      },
     });
     await queryInterface.createTable("votetopics", {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       title: {
         type: DataTypes.STRING(120),
@@ -150,24 +150,24 @@ module.exports = {
         onDelete: "CASCADE",
         references: {
           model: "rooms",
-          key: "id"
-        }
+          key: "id",
+        },
       },
       createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW
+        defaultValue: DataTypes.NOW,
       },
       openAt: {
         type: DataTypes.DATE,
-        allowNull: true
-      }
+        allowNull: true,
+      },
     });
     await queryInterface.createTable("votechoices", {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       title: {
         type: DataTypes.STRING(120),
@@ -179,20 +179,20 @@ module.exports = {
         onDelete: "CASCADE",
         references: {
           model: "votetopics",
-          key: "id"
-        }
+          key: "id",
+        },
       },
       showOrder: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 1
-      }
+        defaultValue: 1,
+      },
     });
     await queryInterface.createTable("voteballots", {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       userId: {
         type: DataTypes.INTEGER,
@@ -200,8 +200,8 @@ module.exports = {
         onDelete: "CASCADE",
         references: {
           model: "users",
-          key: "id"
-        }
+          key: "id",
+        },
       },
       choiceId: {
         type: DataTypes.INTEGER,
@@ -209,14 +209,14 @@ module.exports = {
         onDelete: "CASCADE",
         references: {
           model: "votechoices",
-          key: "id"
-        }
+          key: "id",
+        },
       },
       createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW
-      }
+        defaultValue: DataTypes.NOW,
+      },
     });
   },
 
@@ -228,5 +228,5 @@ module.exports = {
     await queryInterface.dropTable("roomadmins");
     await queryInterface.dropTable("rooms");
     await queryInterface.dropTable("users");
-  }
+  },
 };
