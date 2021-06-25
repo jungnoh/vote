@@ -29,7 +29,7 @@ export default async function createApp() {
     host: process.env.DB_HOSTNAME!,
     port: parseInt(process.env.DB_PORT ?? "5432"),
     dialect: "postgres",
-    models: [__dirname + "/model"],
+    models: [__dirname + "/db/models/*.ts"],
   });
   const sequelizeStore = new (connectSessionSeq(expressSession.Store))({
     db: sequelize,

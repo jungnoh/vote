@@ -1,6 +1,6 @@
 import { Op } from "sequelize";
 
-import { User } from "../db/models/user";
+import User from "../db/models/user";
 import { hashPassword, verifyPassword } from "../utils/crypto";
 
 interface NewUser {

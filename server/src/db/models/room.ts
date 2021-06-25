@@ -1,19 +1,19 @@
 import { DataTypes } from "sequelize";
 import {
+  AllowNull,
   BelongsTo,
   Column,
   CreatedAt,
   DataType,
   ForeignKey,
   Model,
-  NotNull,
   Table,
 } from "sequelize-typescript";
 
-import { User } from "./user";
+import User from "./user";
 
 @Table
-export class Room extends Model {
+export default class Room extends Model {
   @Column(DataType.STRING(120))
   name: string;
 
@@ -26,59 +26,11 @@ export class Room extends Model {
   @Column
   endedAt: Date;
 
+  @AllowNull
   @ForeignKey(() => User)
-  @NotNull
   @Column({ type: DataTypes.INTEGER, onDelete: "SET NULL" })
   ownerId: number;
 
   @BelongsTo(() => User)
   owner: User;
-}
-
-@Table
-export class RoomAdmin extends Model {
-  @ForeignKey(() => Room)
-  @NotNull
-  @Column
-  roomId: number;
-
-  @BelongsTo(() => Room)
-  room: Room;
-
-  @ForeignKey(() => User)
-  @NotNull
-  @Column
-  userId: number;
-
-  @BelongsTo(() => User)
-  user: User;
-}
-
-@Table
-export class RoomJoinLog extends Model {
-  @ForeignKey(() => Room)
-  @NotNull
-  @Column
-  roomId: number;
-
-  @BelongsTo(() => Room)
-  room: Room;
-
-  @ForeignKey(() => User)
-  @NotNull
-  @Column
-  userId: number;
-
-  @BelongsTo(() => User)
-  user: User;
-
-  @NotNull
-  @Column(DataType.STRING(40))
-  ip: string;
-
-  @CreatedAt
-  joinedAt: Date;
-
-  @Column
-  leavedAt: Date;
 }

@@ -15,7 +15,6 @@
     "@types/elliptic": "^6.4.12",
     "@types/express": "^4.17.9",
     "@types/express-session": "^1.17.3",
-    "@types/mongoose": "^5.10.2",
     "@types/node": "^15.12.4",
     "@types/passport": "^1.0.4",
     "@types/passport-jwt": "^3.0.5",
