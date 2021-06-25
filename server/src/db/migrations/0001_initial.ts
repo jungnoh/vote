@@ -3,7 +3,7 @@
 import { DataTypes, QueryInterface, Sequelize } from "sequelize";
 
 module.exports = {
-  up: async (queryInterface: QueryInterface, sequelize: Sequelize) => {
+  up: async (queryInterface: QueryInterface, _: Sequelize) => {
     await queryInterface.createTable("users", {
       id: {
         type: DataTypes.INTEGER,
@@ -220,7 +220,7 @@ module.exports = {
     });
   },
 
-  down: async (queryInterface: QueryInterface, Sequelize) => {
+  down: async (queryInterface: QueryInterface, _: Sequelize) => {
     await queryInterface.dropTable("voteballots");
     await queryInterface.dropTable("votechoices");
     await queryInterface.dropTable("votetopics");

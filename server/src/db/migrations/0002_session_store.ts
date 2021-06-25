@@ -3,7 +3,7 @@
 import { DataTypes, QueryInterface, Sequelize } from "sequelize";
 
 module.exports = {
-  up: async (queryInterface: QueryInterface, sequelize: Sequelize) => {
+  up: async (queryInterface: QueryInterface, _: Sequelize) => {
     await queryInterface.createTable("sessions", {
       sid: {
         type: DataTypes.STRING(36),
@@ -14,7 +14,7 @@ module.exports = {
     });
   },
 
-  down: async (queryInterface: QueryInterface, sequelize: Sequelize) => {
+  down: async (queryInterface: QueryInterface, _: Sequelize) => {
     await queryInterface.dropTable("sessions");
   },
 };
