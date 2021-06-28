@@ -10,6 +10,16 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true,
       },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
+      },
       username: {
         type: DataTypes.STRING(32),
         allowNull: false,
@@ -26,11 +36,6 @@ module.exports = {
         type: DataTypes.STRING(32),
         allowNull: false,
       },
-      createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
-      },
       sparcsId: {
         type: DataTypes.STRING(120),
         allowNull: false,
@@ -45,7 +50,12 @@ module.exports = {
       createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW,
+        defaultValue: Sequelize.fn("NOW"),
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
       },
       startedAt: {
         type: DataTypes.DATE,
@@ -67,11 +77,21 @@ module.exports = {
         },
       },
     });
-    await queryInterface.createTable("roomadmins", {
+    await queryInterface.createTable("room_admins", {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
       },
       roomId: {
         type: DataTypes.INTEGER,
@@ -92,11 +112,21 @@ module.exports = {
         },
       },
     });
-    await queryInterface.createTable("roomjoinlogs", {
+    await queryInterface.createTable("room_join_logs", {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
+      },
+      joinedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
       },
       roomId: {
         type: DataTypes.INTEGER,
@@ -120,21 +150,26 @@ module.exports = {
         type: DataTypes.STRING(40),
         allowNull: false,
       },
-      joinedAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
-      },
       leavedAt: {
         type: DataTypes.DATE,
         allowNull: true,
       },
     });
-    await queryInterface.createTable("votetopics", {
+    await queryInterface.createTable("vote_topics", {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
       },
       title: {
         type: DataTypes.STRING(120),
@@ -153,21 +188,26 @@ module.exports = {
           key: "id",
         },
       },
-      createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
-      },
       openAt: {
         type: DataTypes.DATE,
         allowNull: true,
       },
     });
-    await queryInterface.createTable("votechoices", {
+    await queryInterface.createTable("vote_choices", {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
       },
       title: {
         type: DataTypes.STRING(120),
@@ -178,7 +218,7 @@ module.exports = {
         allowNull: false,
         onDelete: "CASCADE",
         references: {
-          model: "votetopics",
+          model: "vote_topics",
           key: "id",
         },
       },
@@ -188,11 +228,21 @@ module.exports = {
         defaultValue: 1,
       },
     });
-    await queryInterface.createTable("voteballots", {
+    await queryInterface.createTable("vote_ballots", {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
       },
       userId: {
         type: DataTypes.INTEGER,
@@ -208,24 +258,19 @@ module.exports = {
         allowNull: false,
         onDelete: "CASCADE",
         references: {
-          model: "votechoices",
+          model: "vote_choices",
           key: "id",
         },
-      },
-      createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
       },
     });
   },
 
   down: async (queryInterface: QueryInterface, _: Sequelize) => {
-    await queryInterface.dropTable("voteballots");
-    await queryInterface.dropTable("votechoices");
-    await queryInterface.dropTable("votetopics");
-    await queryInterface.dropTable("roomjoinlogs");
-    await queryInterface.dropTable("roomadmins");
+    await queryInterface.dropTable("vote_ballots");
+    await queryInterface.dropTable("vote_choices");
+    await queryInterface.dropTable("vote_topics");
+    await queryInterface.dropTable("room_join_logs");
+    await queryInterface.dropTable("room_admins");
     await queryInterface.dropTable("rooms");
     await queryInterface.dropTable("users");
   },

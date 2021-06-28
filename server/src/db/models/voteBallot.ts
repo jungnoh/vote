@@ -1,9 +1,9 @@
-import { Table, Model, ForeignKey, Column, BelongsTo, CreatedAt } from "sequelize-typescript";
+import { Table, Model, ForeignKey, Column, BelongsTo, CreatedAt, UpdatedAt } from "sequelize-typescript";
 
 import User from "./user";
 import VoteChoice from "./voteChoice";
 
-@Table
+@Table({tableName: "vote_ballots"})
 export default class VoteBallot extends Model {
   @ForeignKey(() => User)
   @Column
@@ -21,4 +21,7 @@ export default class VoteBallot extends Model {
 
   @CreatedAt
   createdAt: Date;
+
+  @UpdatedAt
+  updatedAt: Date;
 }

@@ -1,9 +1,9 @@
-import { Table, Model, ForeignKey, Column, BelongsTo, DataType, CreatedAt, AllowNull } from "sequelize-typescript";
+import { Table, Model, ForeignKey, Column, BelongsTo, DataType, CreatedAt, AllowNull, UpdatedAt } from "sequelize-typescript";
 
 import Room from "./room";
 import User from "./user";
 
-@Table
+@Table({tableName: "room_join_logs"})
 export default class RoomJoinLog extends Model {
   @ForeignKey(() => Room)
   @Column
@@ -24,6 +24,9 @@ export default class RoomJoinLog extends Model {
 
   @CreatedAt
   joinedAt: Date;
+
+  @UpdatedAt
+  updatedAt: Date;
 
   @AllowNull
   @Column

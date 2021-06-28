@@ -5,17 +5,15 @@ import {
   HasMany,
   Model,
   Table,
+  UpdatedAt,
 } from "sequelize-typescript";
 
 import Room from "./room";
 import RoomJoinLog from "./roomJoinLog";
 import VoteBallot from "./voteBallot";
 
-@Table
+@Table({tableName: "users"})
 export default class User extends Model {
-  @Column
-  name: string;
-
   @Column(DataType.STRING(32))
   username: string;
 
@@ -30,6 +28,9 @@ export default class User extends Model {
 
   @CreatedAt
   createdAt: Date;
+
+  @UpdatedAt
+  updatedAt: Date;
 
   @Column(DataType.STRING(120))
   sparcsId: string;

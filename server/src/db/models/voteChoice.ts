@@ -1,9 +1,9 @@
-import { Table, Model, Column, DataType, ForeignKey, BelongsTo, HasMany, Default } from "sequelize-typescript";
+import { Table, Model, Column, DataType, ForeignKey, BelongsTo, HasMany, Default, CreatedAt, UpdatedAt } from "sequelize-typescript";
 
 import VoteBallot from "./voteBallot";
 import VoteTopic from "./voteTopic";
 
-@Table
+@Table({tableName: "vote_choices"})
 export default class VoteChoice extends Model {
   @Column(DataType.STRING(120))
   title: string;
@@ -21,4 +21,10 @@ export default class VoteChoice extends Model {
   @Default(1)
   @Column
   showOrder: number;
+
+  @CreatedAt
+  createdAt: Date;
+
+  @UpdatedAt
+  updatedAt: Date;
 }

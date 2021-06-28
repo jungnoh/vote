@@ -8,17 +8,21 @@ import {
   ForeignKey,
   Model,
   Table,
+  UpdatedAt,
 } from "sequelize-typescript";
 
 import User from "./user";
 
-@Table
+@Table({tableName: "rooms"})
 export default class Room extends Model {
   @Column(DataType.STRING(120))
   name: string;
 
   @CreatedAt
   createdAt: Date;
+
+  @UpdatedAt
+  updatedAt: Date;
 
   @Column
   startedAt: Date;

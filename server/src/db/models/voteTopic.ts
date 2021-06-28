@@ -8,12 +8,13 @@ import {
   HasMany,
   Model,
   Table,
+  UpdatedAt,
 } from "sequelize-typescript";
 
 import Room from "./room";
 import VoteChoice from "./voteChoice";
 
-@Table
+@Table({tableName: "vote_topics"})
 export default class VoteTopic extends Model {
   @Column(DataType.STRING(120))
   title: string;
@@ -30,6 +31,9 @@ export default class VoteTopic extends Model {
 
   @CreatedAt
   createdAt: Date;
+
+  @UpdatedAt
+  updatedAt: Date;
 
   @AllowNull
   @Column
