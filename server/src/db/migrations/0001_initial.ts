@@ -23,10 +23,12 @@ module.exports = {
       username: {
         type: DataTypes.STRING(32),
         allowNull: false,
+        unique: true,
       },
       email: {
         type: DataTypes.STRING(120),
         allowNull: false,
+        unique: true,
       },
       password: {
         type: DataTypes.STRING(240),
@@ -39,6 +41,7 @@ module.exports = {
       sparcsId: {
         type: DataTypes.STRING(120),
         allowNull: false,
+        unique: true,
       },
     });
     await queryInterface.createTable("rooms", {

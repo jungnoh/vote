@@ -11,6 +11,16 @@ module.exports = {
       },
       expires: DataTypes.DATE,
       data: DataTypes.TEXT,
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
+      },
     });
   },
 

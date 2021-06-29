@@ -5,6 +5,7 @@ import {
   HasMany,
   Model,
   Table,
+  Unique,
   UpdatedAt,
 } from "sequelize-typescript";
 
@@ -14,9 +15,11 @@ import VoteBallot from "./voteBallot";
 
 @Table({tableName: "users"})
 export default class User extends Model {
+  @Unique
   @Column(DataType.STRING(32))
   username: string;
 
+  @Unique
   @Column(DataType.STRING(120))
   email: string;
 
@@ -32,6 +35,7 @@ export default class User extends Model {
   @UpdatedAt
   updatedAt: Date;
 
+  @Unique
   @Column(DataType.STRING(120))
   sparcsId: string;
 
