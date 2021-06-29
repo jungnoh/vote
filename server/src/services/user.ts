@@ -1,7 +1,11 @@
-import { Op } from "sequelize";
+import { randomBytes } from "crypto";
 
+import { Op, Transaction } from "sequelize";
+
+import Connection from "../db/connection";
 import User from "../db/models/user";
 import { hashPassword, verifyPassword } from "../utils/crypto";
+import { UserInformation } from "../utils/sso";
 
 interface NewUser {
   name: string;
@@ -52,7 +56,7 @@ export async function findOne(
  * @param user 사용자 정보
  * @warning 반드시 validation / sanitization을 한 후에 이 함수로 요청을 넘겨줘야 합니다.
  */
-export async function create(user: NewUser): Promise<Error | User> {
+export async function create(user: NewUser): Promise<User> {
   const userExists = await User.count({
     where: {
       [Op.or]: [
@@ -63,7 +67,9 @@ export async function create(user: NewUser): Promise<Error | User> {
     },
   });
   if (userExists) {
-    return new Error("EUSER_EXISTS");
+    const err = new Error("User exists");
+    err.name = "EUSER_EXISTS";
+    throw err;
   }
   const passwordHash = await hashPassword(user.password);
   const userPayload = {
@@ -73,4 +79,27 @@ export async function create(user: NewUser): Promise<Error | User> {
 
   const createdUser = await User.create(userPayload);
   return createdUser;
+}
+
+export async function ensureSsoUser(info: UserInformation): Promise<User> {
+  return await Connection.db().transaction({
+    isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE
+  }, async t => {
+    const existingUser = await User.findOne({where: {sparcsId: info.sparcs_id}, transaction: t});
+    if (existingUser) {
+      existingUser.email = info.email;
+      existingUser.fullName = `${info.last_name}${info.first_name}`;
+      await existingUser.save();
+      return existingUser;
+    }
+    const passwordHash = await hashPassword(randomBytes(8));
+    const createdUser = await User.create({
+      username: info.sparcs_id,
+      email: info.email,
+      password: passwordHash,
+      fullName: `${info.last_name}${info.first_name}`,
+      sparcsId: info.sparcs_id
+    }, {transaction: t});
+    return createdUser;
+  });
 }

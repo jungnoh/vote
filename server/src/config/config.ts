@@ -20,6 +20,8 @@ const envVarsSchema = Joi.object()
     JWT_ACCESS_EXPIRATION: Joi.number()
       .default(30)
       .description("JWT life span in seconds"),
+    SSO_API_KEY: Joi.string().required(),
+    SSO_API_SECRET: Joi.string().required(),
   })
   .unknown();
 
@@ -45,4 +47,8 @@ export default {
     secret: envVars.JWT_SECRET,
     accessExpiration: envVars.JWT_ACCESS_EXPIRATION,
   },
+  sso: {
+    key: envVars.SSO_API_KEY,
+    secret: envVars.SSO_API_SECRET
+  }
 };

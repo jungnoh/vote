@@ -7,7 +7,7 @@ export const login = {
   }),
 };
 
-export const loginSSOCallback = {
+export const loginSSOFinish = {
   query: joi.object().keys({
     state: joi.string().required(),
     code: joi.string().required(),

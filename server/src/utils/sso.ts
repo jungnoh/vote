@@ -10,7 +10,7 @@ Made by SPARCS SSO Team - appleseed, jungnoh
 Dependencies: node ^10, axios ^0.18
 */
 
-interface UserInformation {
+export interface UserInformation {
   uid: string;
   first_name: string;
   last_name: string;
@@ -139,12 +139,7 @@ export default class Client {
       timestamp,
       sign,
     };
-    try {
-      const res = await Client._postData<UserInformation>(this.URLS.token_info, params);
-      return res;
-    } catch (err) {
-      return err;
-    }
+    return await Client._postData<UserInformation>(this.URLS.token_info, params);
   }
 
   getLogoutUrl(sid, redirectUri) {
