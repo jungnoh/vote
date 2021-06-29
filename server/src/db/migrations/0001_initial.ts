@@ -50,6 +50,10 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true,
       },
+      name: {
+        type: DataTypes.STRING(120),
+        allowNull: false,
+      },
       createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -104,6 +108,7 @@ module.exports = {
           model: "rooms",
           key: "id",
         },
+        unique: "room_admin_m2m"
       },
       userId: {
         type: DataTypes.INTEGER,
@@ -113,6 +118,7 @@ module.exports = {
           model: "users",
           key: "id",
         },
+        unique: "room_admin_m2m"
       },
     });
     await queryInterface.createTable("room_join_logs", {
