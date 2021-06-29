@@ -6,12 +6,12 @@ import expressSession from "express-session";
 import helmet from "helmet";
 import httpStatus from "http-status";
 import passport from "passport";
-import { Sequelize } from "sequelize-typescript";
 import xss from "xss-clean";
 
 import config from "./config/config";
 import logger from "./config/logger";
 import jwtStrategy from "./config/passport";
+import Connection from "./db/connection";
 import { errorConverter, errorHandler } from "./middlewares/error";
 import router from "./routes";
 import ApiError from "./utils/ApiError";
@@ -22,15 +22,7 @@ export default async function createApp() {
     logger.debug("Running in development mode");
   }
 
-  const sequelize = new Sequelize({
-    username: process.env.DB_USERNAME!,
-    password: process.env.DB_PASSWORD!,
-    database: process.env.DB_NAME!,
-    host: process.env.DB_HOSTNAME!,
-    port: parseInt(process.env.DB_PORT ?? "5432"),
-    dialect: "postgres",
-    models: [__dirname + "/db/models/*.ts"],
-  });
+  const sequelize = Connection.db();
   const sequelizeStore = new (connectSessionSeq(expressSession.Store))({
     db: sequelize,
     tableName: "sessions",
