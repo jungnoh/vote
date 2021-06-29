@@ -5,16 +5,16 @@ import express from "express";
 import expressSession from "express-session";
 import helmet from "helmet";
 import httpStatus from "http-status";
-import passport from "passport";
 import xss from "xss-clean";
 
 import config from "./config/config";
 import logger from "./config/logger";
-import jwtStrategy from "./config/passport";
 import Connection from "./db/connection";
+import { jwt } from "./middlewares/auth";
 import { errorConverter, errorHandler } from "./middlewares/error";
 import router from "./routes";
 import ApiError from "./utils/ApiError";
+import wrapAsync from "./utils/wrap";
 
 export default async function createApp() {
   // Set configs
@@ -56,9 +56,8 @@ export default async function createApp() {
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
 
-  // Passport
-  app.use(passport.initialize());
-  passport.use(jwtStrategy);
+  // JWT
+  app.use(wrapAsync(jwt));
 
   // Routes
   app.use(router);

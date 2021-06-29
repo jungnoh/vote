@@ -18,7 +18,7 @@ const envVarsSchema = Joi.object()
     DB_PASSWORD: Joi.string().default("").allow(""),
     JWT_SECRET: Joi.string().required().description("JWT secret key"),
     JWT_ACCESS_EXPIRATION: Joi.number()
-      .default(30)
+      .default(60*60*24)
       .description("JWT life span in seconds"),
     SSO_API_KEY: Joi.string().required(),
     SSO_API_SECRET: Joi.string().required(),
@@ -35,10 +35,10 @@ if (error) {
 
 export default {
   env: envVars.NODE_ENV,
-  port: envVars.PORT,
+  port: parseInt(envVars.PORT),
   sequelize: {
     host: envVars.DB_HOST,
-    port: envVars.DB_PORT,
+    port: parseInt(envVars.DB_PORT),
     database: envVars.DB_DATABASE,
     username: envVars.DB_USERNAME,
     password: envVars.DB_PASSWORD,

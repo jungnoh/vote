@@ -42,11 +42,13 @@ export async function authenticate(
 }
 
 export async function findOne(
-  type: "username" | "string",
+  type: "username" | "sparcsId" | "email",
   value: string
 ): Promise<User | null> {
   const user = await User.findOne({
-    [type]: value,
+    where: {
+      [type]: value,
+    }
   });
   return user;
 }
